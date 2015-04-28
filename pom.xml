@@ -40,12 +40,6 @@
 			<id>central</id>
 			<url>http://repo.maven.apache.org/maven2</url>
 		</repository>
-
-		<repository>
-			<id>AML</id>
-			<url>http://clinker.isagroup.es/nexus/content/repositories/AML</url>
-		</repository>
-		
 		<!-- 3rd Party repository -->
 		<repository>
 			<id>3rd-party</id>
@@ -55,16 +49,9 @@
 	</repositories>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>es.us.isa</groupId>
-			<artifactId>AML</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-		
-		<!-- localhost <dependency> <groupId>isa.us.es.opl</groupId> <artifactId>oplall</artifactId> 
+		<!-- localhost -->
+		<!-- <dependency> <groupId>es.us.isa.opl</groupId> <artifactId>oplall</artifactId> 
 			<version>1.0.0</version> </dependency> -->
-
 		<dependency>
 			<groupId>com.ibm.cplex</groupId>
 			<artifactId>OPL</artifactId>

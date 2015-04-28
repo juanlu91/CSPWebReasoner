@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
-import es.us.isa.aml.util.OperationResponse;
-import es.us.isa.aml.util.ReasonerType;
-import es.us.isa.cwr.controller.util.CplexHandler;
+import es.us.isa.cwr.controller.handler.CplexHandler;
+import es.us.isa.cwr.controller.util.OperationResponse;
 
 /**
  * @author jdelafuente
@@ -102,9 +101,5 @@ public class SolverController {
 
 	public OperationResponse whyNotImplies() {
 		throw new UnsupportedOperationException("Not supported yet."); // Todo
-	}
-
-	public ReasonerType getType() {
-		return ReasonerType.CPLEX;
 	}
 }
