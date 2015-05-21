@@ -9,7 +9,6 @@ import ilog.opl.IloOplModelDefinition;
 import ilog.opl.IloOplModelSource;
 import ilog.opl.IloOplSettings;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URLDecoder;
@@ -49,11 +48,10 @@ public class LanguageController {
 		
 		try {			
 			temp = File.createTempFile(String.valueOf(date.getTime()), ".opl");
-			BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
-			
+			FileWriter fw = new FileWriter(temp);			
 			content = URLDecoder.decode(content, "UTF-8");
-			bw.write(content);
-			bw.close();
+			fw.write(content);
+			fw.close();
 			
 			IloOplModelSource modelSource = oplF.createOplModelSource(temp.getAbsolutePath());
 			
