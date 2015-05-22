@@ -15,9 +15,9 @@ import java.net.URLDecoder;
 import java.util.Date;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -35,7 +35,7 @@ public class LanguageController {
 	
 	@RequestMapping(value = "check", method = RequestMethod.POST)
 	@ResponseBody
-	public Object checkSyntax(@RequestParam String content) {
+	public Object checkSyntax(@RequestBody String raw) {
 
 		Gson gson = new Gson();
 		
@@ -48,8 +48,8 @@ public class LanguageController {
 		
 		try {			
 			temp = File.createTempFile(String.valueOf(date.getTime()), ".opl");
-			FileWriter fw = new FileWriter(temp);			
-			content = URLDecoder.decode(content, "UTF-8");
+			FileWriter fw = new FileWriter(temp);
+			String content = URLDecoder.decode(raw, "UTF-8");
 			fw.write(content);
 			fw.close();
 			
@@ -58,7 +58,7 @@ public class LanguageController {
 			IloOplSettings settings = new IloOplSettings(env, errorHandler);
 			IloOplModelDefinition def = oplF.createOplModelDefinition(
 					modelSource, settings);
-
+			
 			String using = content.substring(0, content.indexOf("\n"))
 					.trim();
 			Boolean useCP = using.equals("using CP;") ? true : false;

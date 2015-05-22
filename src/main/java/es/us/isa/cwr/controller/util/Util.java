@@ -4,7 +4,6 @@
 package es.us.isa.cwr.controller.util;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,14 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -35,56 +31,6 @@ import org.w3c.dom.Document;
  *
  */
 public class Util {
-
-	// HTTP POST request
-	public static String sendPost(String url, String content) throws Exception {
-
-		javax.net.ssl.HttpsURLConnection
-				.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
-
-					public boolean verify(String hostname,
-							javax.net.ssl.SSLSession sslSession) {
-						if (hostname.equals("localhost")) {
-							return true;
-						}
-						return false;
-					}
-				});
-
-		URL obj = new URL(url);
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-
-		// add reuqest header
-		con.setRequestMethod("POST");
-
-		String param = "content=" + URLEncoder.encode(content, "UTF-8");
-
-		// Send post request
-		con.setDoOutput(true);
-		try {
-			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-			wr.writeBytes(param);
-			wr.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		StringBuilder response = null;
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					con.getInputStream()), 2097152);
-			String inputLine;
-			response = new StringBuilder();
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			in.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return response.toString();
-	}
 
 	private static final Logger LOG = Logger.getLogger(Util.class.getName());
 

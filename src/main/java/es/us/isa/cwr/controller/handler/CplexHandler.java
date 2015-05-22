@@ -56,15 +56,15 @@ public class CplexHandler {
 		IloOplFactory.setDebugMode(false);
 	}
 
-	public String solve(String content) {
+	public String solve(String raw) {
 		Date date = new Date();
 		File temp;		
 		Boolean solve = false;
 
 		try {
 			temp = File.createTempFile(String.valueOf(date.getTime()), ".opl");
-			BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
-			content = URLDecoder.decode(content, "UTF-8");
+			BufferedWriter bw = new BufferedWriter(new FileWriter(temp));			
+			String content = URLDecoder.decode(raw, "UTF-8");			
 			bw.write(content);
 			bw.close();
 
@@ -109,7 +109,6 @@ public class CplexHandler {
 			} else {
 				solve = null;
 				LOG.log(Level.SEVERE, e.getMessage());
-				LOG.log(Level.INFO, content);
 			}
 			e.printStackTrace();
 		} catch (Error | Exception e) {
@@ -121,7 +120,7 @@ public class CplexHandler {
 		return new Gson().toJson(solve);
 	}
 
-	public String explain(String content) {
+	public String explain(String raw) {
 		OperationResponse response = new OperationResponse();
 
 		Boolean solve = false;
@@ -135,7 +134,7 @@ public class CplexHandler {
 			temp = File.createTempFile(String.valueOf(date.getTime()), ".opl");
 			BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
 
-			content = URLDecoder.decode(content, "UTF-8");
+			String content = URLDecoder.decode(raw, "UTF-8");
 			bw.write(content);
 			bw.close();
 
@@ -247,7 +246,6 @@ public class CplexHandler {
 			} else {
 				solve = null;
 				LOG.log(Level.SEVERE, e.getMessage());
-				LOG.log(Level.INFO, content);
 			}
 		} catch (Error | Exception e) {
 			result = "ERROR";

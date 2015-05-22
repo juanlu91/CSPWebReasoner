@@ -4,9 +4,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -27,7 +27,7 @@ public class SolverController {
 
 	@RequestMapping(value = "solve", method = RequestMethod.POST)
 	@ResponseBody
-	public String solve(@RequestParam String content) {
+	public String solve(@RequestBody String content) {
 
 		Boolean solve = false;
 
@@ -45,12 +45,13 @@ public class SolverController {
 			solve = false;
 			LOG.log(Level.SEVERE, "There was an error processing the file");
 		}
+		
 		return new Gson().toJson(solve);
 	}
 
 	@RequestMapping(value = "explain", method = RequestMethod.POST)
 	@ResponseBody
-	public String explain(@RequestParam String content) {
+	public String explain(@RequestBody String content) {
 
 		OperationResponse response = new OperationResponse();
 
@@ -75,7 +76,7 @@ public class SolverController {
 
 	@RequestMapping(value = "implies", method = RequestMethod.POST)
 	@ResponseBody
-	public String implies(@RequestParam String content) {
+	public String implies(@RequestBody String content) {
 		Boolean compliant = false;
 
 		if (content != null) {
