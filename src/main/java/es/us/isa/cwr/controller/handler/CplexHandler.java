@@ -47,8 +47,6 @@ public class CplexHandler {
 	private IloOplErrorHandler errorHandler;
 
 	public void init() {
-		IloOplFactory.setDebugMode(false);
-
 		ByteArrayOutputStream errors = new ByteArrayOutputStream();
 		env = new IloEnv();
 		factory = new IloOplFactory();
@@ -101,6 +99,8 @@ public class CplexHandler {
 				cplex.clearModel();
 				opl.endAll();
 			}
+			
+			env.end();
 		} catch (IloException e) {
 			String[] aux = e.getMessage().split(":");
 			String exc = aux[0];
@@ -237,6 +237,8 @@ public class CplexHandler {
 				cplex.clearModel();
 				opl.endAll();
 			}
+			
+			env.end();
 		} catch (IloException e) {
 			String[] aux = e.getMessage().split(":");
 			String exc = aux[0];
