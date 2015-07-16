@@ -10,6 +10,7 @@ import ilog.cp.IloCP;
 import ilog.cp.IloCP.ConflictStatus;
 import ilog.cplex.IloCplex;
 import ilog.opl.IloOplElement;
+import ilog.opl.IloOplElementType;
 import ilog.opl.IloOplErrorHandler;
 import ilog.opl.IloOplFactory;
 import ilog.opl.IloOplModel;
@@ -168,8 +169,7 @@ public class CplexHandler {
 				Iterator<IloOplElement> it = opl.getElementIterator(); it
 						.hasNext();) {
 					IloOplElement e = it.next();
-					if (!e.isDecisionVariable() && !e.isData()
-							&& !e.isCalculated()) {
+					if (e.getElementType().equals(IloOplElementType.Type.CONSTRAINT)) {
 						IloConstraint c = e.asConstraint();
 						c.setName(e.getName());
 						cts_list.add(c);
@@ -189,16 +189,19 @@ public class CplexHandler {
 						result = baos.toString();
 					} else {
 						result = "The document has conflicts";
-						if (cp.refineConflict(constraints, prefs)) {
+						if (cp.refineConflict()) {
 							for (IloConstraint constraint : constraints) {
 								ConflictStatus cs = cp.getConflict(constraint);
 
 								String constraint_name = constraint.getName();
+								
+								/*
 								if (constraint_name.contains("_")) {
 									constraint_name = constraint_name
 											.substring(0, constraint_name
 													.lastIndexOf("_"));
 								}
+								*/
 
 								if (cs.equals(ConflictStatus.ConflictMember)) {
 									if (!conflicts
@@ -223,6 +226,25 @@ public class CplexHandler {
 				IloOplModel opl = oplFactory.createOplModel(def, cplex);
 				opl.generate();
 				solve = cplex.solve();
+				
+				List<IloConstraint> cts_list = new ArrayList<>();
+				for (@SuppressWarnings("unchecked")
+				Iterator<IloOplElement> it = opl.getElementIterator(); it
+						.hasNext();) {
+					IloOplElement e = it.next();
+					if (e.getElementType().equals(IloOplElementType.Type.CONSTRAINT)) {
+						IloConstraint c = e.asConstraint();
+						c.setName(e.getName());
+						cts_list.add(c);
+					}
+				}
+
+				IloConstraint[] constraints = cts_list
+						.toArray(new IloConstraint[cts_list.size()]);
+				double[] prefs = new double[constraints.length];
+				for (int p = 0; p < constraints.length; p++) {
+					prefs[p] = 1.0;
+				}
 
 				try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 					if (solve) {
@@ -230,8 +252,34 @@ public class CplexHandler {
 						result = baos.toString();
 					} else {
 						result = "The document has conflicts";
-						opl.printConflict(baos);
-						conflicts.add(baos.toString());
+									
+						if (cplex.refineConflict(constraints, prefs)) {
+							for (IloConstraint constraint : constraints) {
+								
+								ilog.cplex.IloCplex.ConflictStatus cs = cplex.getConflict(constraint);
+
+								String constraint_name = constraint.getName();
+								
+								/*
+								if (constraint_name.contains("_")) {
+									constraint_name = constraint_name
+											.substring(0, constraint_name
+													.lastIndexOf("_"));
+								}
+								*/
+
+								if (cs.equals(ilog.cplex.IloCplex.ConflictStatus.Member)) {
+									if (!conflicts
+											.contains(constraint_name))
+										conflicts.add(constraint_name);
+								} else if (cs
+										.equals(ilog.cplex.IloCplex.ConflictStatus.PossibleMember)) {
+									if (!conflicts
+											.contains(constraint_name))
+										conflicts.add(constraint_name);
+								}
+							}
+						}
 					}
 				}
 				cplex.clearModel();
