@@ -40,12 +40,7 @@
             <id>central</id>
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
-        <!-- 3rd Party repository -->
-        <repository>
-            <id>3rd-party</id>
-            <url>http://clinker.isagroup.es/nexus/content/repositories/thirdparty</url>
-        </repository>
-
+      
     </repositories>
 
     <dependencies>
